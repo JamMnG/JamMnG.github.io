@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 - 소셜 독서 노트</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00bfff;
+            --bg-main: #0a0a0a;
+            --bg-card: #141414;
+            --text-main: #f0f0f0;
+            --text-muted: #9e9e9e;
+            --border-color: #2a2a2a;
+        }
+
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+
+        .back-btn { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; margin-bottom: 30px; transition: opacity 0.3s; }
+        .back-btn:hover { opacity: 0.8; }
+
+        .project-header { border-bottom: 1px solid var(--border-color); padding-bottom: 30px; margin-bottom: 40px; }
+        .project-header h1 { font-size: 2.5rem; margin: 0 0 10px 0; }
+        
+        .tags span { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px; border: 1px solid var(--primary-color); display: inline-block; margin-bottom: 5px; }
+
+        .content-section { margin-bottom: 50px; }
+        .content-section h2 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; }
+
+        /* 인터랙티브 가이드 스타일 */
+        .interactive-guide {
+            display: flex;
+            gap: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+
+        .guide-image { flex: 1; max-width: 350px; }
+        .guide-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            transition: opacity 0.3s ease-in-out; 
+            opacity: 1;
+        }
+
+        .guide-content { flex: 2; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
+        .tab-btn:hover { color: var(--text-main); border-color: #555; }
+        .tab-btn.active { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
+
+        .panel { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .panel.active { display: block; }
+        .panel h4 { color: #fff; margin: 0 0 10px 0; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+        .panel p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
+
+        /* ======== 💡 새로 업그레이드된 기술 포인트 카드 디자인 ======== */
+        .tech-point-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 35px;
+        }
+        
+        .tech-point-title {
+            color: var(--text-main);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .tech-point-card { 
+            background: #1a1a2e; /* 진한 네이비/블랙 배경 */
+            border: 1px solid var(--border-color); 
+            border-left: 4px solid var(--primary-color); /* 왼쪽 네온 블루 라인 포인트 */
+            padding: 20px 25px; 
+            border-radius: 12px; /* 모서리를 조금 더 둥글게 */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .tech-point-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 191, 255, 0.1);
+            border-color: #333;
+        }
+
+        .tech-point-card h4 { 
+            margin: 0; 
+            color: #fff; 
+            font-size: 1.05rem; 
+            font-weight: 700;
+        }
+        
+        .tech-point-card p { 
+            margin: 0; 
+            font-size: 0.95rem; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+        }
+        /* ============================================================== */
+
+        pre { background-color: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; color: #d4d4d4; margin-top: 20px; font-family: 'Courier New', Courier, monospace; }
+        .highlight-text { color: #fff; font-weight: bold; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .interactive-guide { flex-direction: column; align-items: center; } .guide-image { max-width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html#projects" class="back-btn">← 프로젝트 목록으로</a> 
+
+        <header class="project-header">
+            <h1>Social Reading (맞춤형 소셜 독서 노트)</h1> 
+            <p style="color: var(--text-muted); margin-top: 5px;">사용자의 읽기 취향을 분석하고 기록을 공유하는 데이터 기반 소셜 플랫폼</p> 
+            <div class="tags" style="margin-top: 15px;">
+                <span>FastAPI</span><span>MySQL</span><span>Redis (Caching)</span><span>Tailwind CSS</span> 
+            </div>
+        </header>
+
+        <section class="content-section">
+            <h2>💡 서비스 주요 기능 및 구현 기술</h2> 
+            <div class="interactive-guide">
+                <div class="guide-image">
+                    <img id="dynamic-screenshot" src="reading-1.png" alt="도서 검색 API 기능"> 
+                </div>
+                
+                <div class="guide-content">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-target="tab1" data-image="image_ecad23.png">API 캐싱 & 도서 검색</button> 
+                        <button class="tab-btn" data-target="tab2" data-image="image_adczx123.png">커스텀 독서 노트</button> 
+                        <button class="tab-btn" data-target="tab3" data-image="image_qweqww123.png">취향 매칭 추천</button> 
+                        <button class="tab-btn" data-target="tab4" data-image="image_dsafaf123.png">소셜 피드</button> 
+                    </div>
+
+                    <div class="tab-panels">
+                        <div id="tab1" class="panel active">
+                            <h4>국내 도서 DB 연동 및 API 최적화</h4> 
+                            <p>외부 도서 검색 API의 속도 저하를 방지하기 위해 <strong>Redis 인메모리 캐싱</strong>을 도입했습니다. 빈번한 검색 요청을 캐시에서 즉시 반환하여 <strong>캐시 적중률 72%</strong>, <strong>평균 응답 속도 128ms</strong>를 달성했습니다.</p> 
+                        </div>
+
+                        <div id="tab2" class="panel">
+                            <h4>실시간 자동 저장(Auto-save) 시스템</h4> 
+                            <p>사용자가 독서의 흐름을 놓치지 않도록 '자동 저장됨' 기능을 구현했습니다. 작성 중인 본문과 태그는 백엔드의 <strong>Upsert 비동기 통신</strong>을 통해 데이터 유실 없이 실시간으로 저장됩니다.</p> 
+                        </div>
+
+                        <div id="tab3" class="panel">
+                            <h4>데이터 기반 개인화 추천 (95% 매칭)</h4> 
+                            <p>사용자의 독서 기록과 선호 태그를 분석하여 다른 사용자의 데이터와 대조합니다. 이를 통해 취향 매칭률(%)을 수치화하고 정밀한 개인 맞춤형 도서를 추천합니다.</p> 
+                        </div>
+
+                        <div id="tab4" class="panel">
+                            <h4>관심사 기반 소셜 네트워킹 피드</h4> 
+                            <p>단순한 기록을 넘어, 비슷한 독서 취향을 가진 사용자들의 노트를 실시간 피드로 제공합니다. RDB(MySQL) 정규화 설계를 통해 공감과 댓글 시스템을 효율적으로 관리합니다.</p> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>⚙️ 핵심 백엔드 로직 (자동 저장 및 백그라운드 처리)</h2> 
+            <p>UI의 '자동 저장' 기능을 지원하고 서버 응답 성능을 방어하기 위해 <span class="highlight-text">FastAPI의 BackgroundTasks</span>를 활용한 로직입니다.</p> 
+            
+            <pre><code>
+from fastapi import APIRouter, BackgroundTasks, Depends
+from pydantic import BaseModel
+from services import note_service, recommend_service
+
+router = APIRouter()
+
+class NoteAutoSaveRequest(BaseModel):
+    book_title: str
+    rating: int
+    content: str
+    tags: list[str]
+
+@router.put("/api/v1/notes/auto-save")
+async def auto_save_note(note_data: NoteAutoSaveRequest, background_tasks: BackgroundTasks):
+    """
+    실시간 자동 저장을 수행하고, 무거운 분석 작업은 백그라운드에서 처리합니다.
+    """
+    # 1. Upsert 로직: 기존 노트가 있으면 업데이트, 없으면 생성 (DB 부하 최소화)
+    note = await note_service.upsert_note(note_data)
+    
+    # 2. 백그라운드 작업: 태그 매핑 및 추천 알고리즘 프로필 업데이트
+    # 클라이언트에게 즉시 응답을 보내기 위해 메인 스레드에서 분리
+    background_tasks.add_task(recommend_service.update_user_taste_profile, note.user_id)
+    
+    return {"status": "success", "message": "노트가 안전하게 자동 저장되었습니다."}
+            </code></pre> 
+
+            <div class="tech-point-container">
+                <h3 class="tech-point-title">💡 기술 적용 포인트 (Key Achievements)</h3>
+                
+                <div class="tech-point-card">
+                    <h4>🔄 Upsert 기반의 무중단 자동 저장</h4>
+                    <p>잦은 자동 저장 요청에도 DB 성능을 유지하기 위해 <code>INSERT ON DUPLICATE KEY UPDATE</code>(Upsert) 방식을 채택하여 DB I/O 부하를 크게 줄였습니다.</p> 
+                </div>
+                
+                <div class="tech-point-card">
+                    <h4>⚡ Background Tasks를 활용한 논블로킹 처리</h4>
+                    <p>태그 파싱 및 추천 알고리즘 갱신과 같은 무거운 작업은 백그라운드로 위임하여 <strong>128ms의 빠른 응답 속도</strong>를 유지하도록 설계했습니다.</p> 
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.panel');
+            const mainImage = document.getElementById('dynamic-screenshot');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    panels.forEach(p => p.classList.remove('active'));
+                    const targetId = btn.getAttribute('data-target');
+                    document.getElementById(targetId).classList.add('active');
+
+                    // 이미지 페이드 전환 효과 
+                    const targetImageSrc = btn.getAttribute('data-image');
+                    mainImage.style.opacity = 0; 
+                    setTimeout(() => {
+                        mainImage.src = targetImageSrc; 
+                        mainImage.style.opacity = 1; 
+                    }, 150); 
+                });
+            });
+        });
+    </script>
+</body>
+</html>

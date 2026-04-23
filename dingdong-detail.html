@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 - 딩동마켓</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 포트폴리오 메인과 동일한 네온 블루 테마 복구 */
+        :root {
+            --primary-color: #00bfff; 
+            --bg-main: #0a0a0a;
+            --bg-card: #141414;
+            --text-main: #f0f0f0;
+            --text-muted: #9e9e9e;
+            --border-color: #2a2a2a;
+        }
+
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+
+        .back-btn { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; margin-bottom: 30px; transition: opacity 0.3s; }
+        .back-btn:hover { opacity: 0.8; }
+
+        .project-header { border-bottom: 1px solid var(--border-color); padding-bottom: 30px; margin-bottom: 40px; }
+        .project-header h1 { font-size: 2.5rem; margin: 0 0 10px 0; }
+        
+        .tags span { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px; border: 1px solid var(--primary-color); display: inline-block; margin-bottom: 5px; }
+
+        .content-section { margin-bottom: 50px; }
+        .content-section h2 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; }
+
+        /* 인터랙티브 가이드 레이아웃 */
+        .interactive-guide {
+            display: flex;
+            gap: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+
+        .guide-image { flex: 1; max-width: 350px; }
+        .guide-image img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            transition: opacity 0.3s ease-in-out; 
+            opacity: 1;
+        }
+
+        .guide-content { flex: 2; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
+        .tab-btn:hover { color: var(--text-main); border-color: #555; }
+        .tab-btn.active { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
+
+        .panel { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .panel.active { display: block; }
+        .panel h4 { color: #fff; margin: 0 0 10px 0; font-size: 1.1rem; }
+        .panel p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
+
+        /* 기술 포인트 카드 */
+        .tech-point-container { display: flex; flex-direction: column; gap: 15px; margin-top: 35px; }
+        .tech-point-card { 
+            background: #1a1a2e; 
+            border: 1px solid var(--border-color); 
+            border-left: 4px solid var(--primary-color); 
+            padding: 20px 25px; 
+            border-radius: 12px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .tech-point-card h4 { margin: 0; color: #fff; font-size: 1.05rem; }
+        .tech-point-card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+
+        pre { background-color: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; color: #d4d4d4; margin-top: 20px; font-family: 'Courier New', Courier, monospace; }
+        .highlight-text { color: var(--primary-color); font-weight: bold; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .interactive-guide { flex-direction: column; align-items: center; } .guide-image { max-width: 100%; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html#projects" class="back-btn">← 프로젝트 목록으로</a>
+
+        <header class="project-header">
+            <h1>딩동마켓 (우리 동네 안전 중고거래)</h1>
+            <p style="color: var(--text-muted); margin-top: 5px;">접근성 강화 및 AI 보안 기술이 적용된 하이퍼로컬 중고거래 플랫폼</p>
+            <div class="tags" style="margin-top: 15px;">
+                <span>Vanilla JS</span><span>CSS Custom Properties</span><span>LocalStorage</span><span>A11y</span>
+            </div>
+        </header>
+
+        <section class="content-section">
+            <h2>💡 서비스 주요 기능 및 구현 기술</h2>
+            <div class="interactive-guide">
+                <div class="guide-image">
+                    <img id="dynamic-screenshot" src="image_fa4feb.png" alt="딩동마켓 기능 스크린샷">
+                </div>
+                
+                <div class="guide-content">
+                    <div class="tabs">
+                        <button class="tab-btn active" data-target="tab1" data-image="image_wqeqe12.png">큰 글씨 모드 (접근성)</button>
+                        <button class="tab-btn" data-target="tab2" data-image="image_qweqwe12.png">AI 비전 자동 등록</button>
+                        <button class="tab-btn" data-target="tab3" data-image="image_adad12.png">안전 거래 보안관</button>
+                        <button class="tab-btn" data-target="tab4" data-image="image_zdzd12.png">신뢰 지수 시스템</button>
+                    </div>
+
+                    <div class="tab-panels">
+                        <div id="tab1" class="panel active">
+                            <h4>디지털 소외계층을 위한 큰 글씨 모드</h4>
+                            <p>시력이 약한 사용자나 어르신들을 위해 <strong>폰트 크기와 레이아웃 대비를 동적으로 조정</strong>하는 테마 전환 기능을 구현했습니다. CSS 변수를 활용하여 시스템 전체의 시인성을 한 번에 높이는 포용적 디자인을 적용했습니다.</p>
+                        </div>
+                        <div id="tab2" class="panel">
+                            <h4>AI Vision 기술을 통한 상품 정보 추출</h4>
+                            <p>사진 인식 자동 입력 기능을 통해 상품 이미지만으로 <strong>제목, 가격, 태그를 자동으로 추출</strong>하여 판매 등록 리소스를 최소화했습니다. 사용자 경험의 편의성을 극대화한 자동화 로직입니다.</p>
+                        </div>
+                        <div id="tab3" class="panel">
+                            <h4>실시간 AI 보안관 모니터링</h4>
+                            <p>채팅 시스템 내에서 외부 결제 유도나 개인정보 요청 등 <strong>의심스러운 패턴을 실시간으로 감지</strong>하여 경고 배너를 노출합니다. 거래 신뢰도를 확보하기 위한 보안 자동화 장치입니다.</p>
+                        </div>
+                        <div id="tab4" class="panel">
+                            <h4>매너와 인증 기반의 신뢰 지수</h4>
+                            <p>거래 횟수와 이웃 평판을 결합한 <strong>'신뢰 지수'</strong>를 프로필에 표시하여 안심 거래를 유도합니다. 또한 거리순으로 안전 거래 장소를 추천하여 대면 거래의 리스크를 관리합니다.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2>⚙️ 핵심 로직 (테마 전환 및 데이터 유지)</h2>
+            <p>UI 상태를 동적으로 제어하고 사용자 설정을 브라우저에 보존하기 위해 <span class="highlight-text">Vanilla JS와 LocalStorage</span>를 결합한 로직입니다.</p>
+            
+            <pre><code>
+// 1. 큰 글씨 모드(Senior Mode) 상태 전환 및 영속화
+function applySeniorMode(isSenior) {
+  // body 클래스 토글을 통해 CSS 변수 테마를 일괄 변경
+  document.body.classList.toggle("senior-mode", isSenior);
+  
+  // 2. 사용자 설정을 브라우저 LocalStorage에 저장
+  localStorage.setItem("dingdong:seniorMode", JSON.stringify(isSenior));
+  
+  // 버튼 접근성 상태 및 텍스트 동적 업데이트
+  const toggleBtn = document.querySelector("#seniorToggle");
+  toggleBtn.setAttribute("aria-pressed", isSenior);
+  toggleBtn.textContent = isSenior ? "일반 모드" : "큰 글씨 모드";
+}
+
+// 3. AI 비전 자동 입력 로직 (편의성 강화)
+function mockVisionAutofill() {
+  // 이미지에서 추출된 데이터를 폼에 순차적으로 자동 기입
+  document.querySelector("#itemTitle").value = "깨끗한 라탄 수납 바구니";
+  document.querySelector("#itemPrice").value = "22000";
+  document.querySelector("#itemTags").value = "생활용품, 수납, 라탄";
+  
+  formStatus.textContent = "AI가 사진 정보를 자동으로 입력했습니다.";
+}
+            </code></pre>
+
+            <div class="tech-point-container">
+                <h3 style="color: var(--text-main); font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;">💡 기술 적용 포인트 (Key Achievements)</h3>
+                <div class="tech-point-card">
+                    <h4>🛠 CSS Custom Properties를 통한 중앙 집중식 테마 관리</h4>
+                    <p><code>styles.css</code>에 정의된 <code>:root</code> 변수를 조작하여, 별도의 JS 스타일 수정 없이 <strong>단일 클래스 토글만으로 전체 UI를 재설계</strong>하는 효율적인 구조를 구축했습니다.</p>
+                </div>
+                <div class="tech-point-card">
+                    <h4>💾 데이터 영속성(Persistence) 확보</h4>
+                    <p>사용자가 페이지를 새로고침하더라도 <strong>LocalStorage를 통해 이전 설정(큰 글씨 모드 등)이 유지</strong>되도록 설계하여 사용자 경험(UX)의 연속성을 확보했습니다.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.panel');
+            const mainImage = document.getElementById('dynamic-screenshot');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    panels.forEach(p => p.classList.remove('active'));
+                    document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+
+                    const targetImageSrc = btn.getAttribute('data-image');
+                    mainImage.style.opacity = 0; 
+                    setTimeout(() => {
+                        mainImage.src = targetImageSrc; 
+                        mainImage.style.opacity = 1; 
+                    }, 150); 
+                });
+            });
+        });
+    </script>
+</body>
+</html>

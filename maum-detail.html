@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 - 마음온도</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-color: #00bfff; --bg-main: #0a0a0a; --bg-card: #141414; --text-main: #f0f0f0; --text-muted: #9e9e9e; --border-color: #2a2a2a; }
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
+        .back-btn { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; margin-bottom: 30px; }
+        .project-header { border-bottom: 1px solid var(--border-color); padding-bottom: 30px; margin-bottom: 40px; }
+        .tags span { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px; border: 1px solid var(--primary-color); display: inline-block; }
+
+        /* 인터랙티브 가이드 레이아웃 */
+        .interactive-guide { display: flex; gap: 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; margin-top: 20px; align-items: flex-start; }
+        .guide-image { flex: 1; max-width: 350px; }
+        .guide-image img { width: 100%; border-radius: 12px; transition: opacity 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .guide-content { flex: 2; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
+        .panel { display: none; } .panel.active { display: block; animation: fadeIn 0.4s; }
+        
+        /* 기술 포인트 카드 */
+        .tech-point-card { background: #1a1a2e; border: 1px solid var(--border-color); border-left: 4px solid var(--primary-color); padding: 20px; border-radius: 8px; margin-top: 15px; }
+        .tech-point-card h4 { margin-bottom: 8px; color: #fff; }
+        .tech-point-card p { margin: 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+
+        pre { background-color: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; color: #d4d4d4; margin-top: 20px; font-family: 'Courier New', Courier, monospace; line-height: 1.5; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 768px) { .interactive-guide { flex-direction: column; align-items: center; } .guide-image { max-width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html#projects" class="back-btn">← 프로젝트 목록으로</a>
+        <header class="project-header">
+            <h1>마음온도 (AI 기반 멘탈케어)</h1>
+            <div class="tags"><span>Python (FastAPI)</span><span>OpenAI API</span><span>MySQL</span></div>
+        </header>
+
+        <section class="interactive-guide">
+            <div class="guide-image"><img id="dynamic-screenshot" src="image_1a88bd.png"></div>
+            <div class="guide-content">
+                <div class="tabs">
+                    <button class="tab-btn" data-target="tab1" data-image="image_1.png">일기 작성 UI</button>
+                    <button class="tab-btn" data-target="tab2" data-image="image_2.png">AI 감정 분석</button>
+                    <button class="tab-btn" data-target="tab3" data-image="image_3.png">감정 통계 대시보드</button>
+                    <button class="tab-btn active" data-target="tab4" data-image="image_4.png">지난 기록 리스트</button>
+                </div>
+                <div class="tab-panels">
+                    <div id="tab1" class="panel"><h4>사용자 경험 중심의 일기 작성</h4><p>사용자가 일기를 작성하며 심적 피로를 덜 수 있도록 부드러운 UI와 실시간 상태 관리를 적용했습니다.</p></div>
+                    <div id="tab2" class="panel"><h4>OpenAI 기반 감정 추출</h4><p>작성된 텍스트에서 감정 데이터를 비동기적으로 추출하여 분석 효율을 높였습니다.</p></div>
+                    <div id="tab3" class="panel"><h4>시각적 통계 피드백</h4><p>캘린더와 차트를 활용해 사용자가 자신의 감정 변화를 한눈에 볼 수 있도록 시각화했습니다.</p></div>
+                    <div id="tab4" class="panel active"><h4>과거 기록 히스토리</h4><p>과거의 감정 온도와 AI의 위로 섞인 피드백을 언제든 다시 돌아볼 수 있도록 아카이빙 기능을 구현했습니다.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section style="margin-top: 50px;">
+            <h2>⚙️ 핵심 백엔드 로직 (비동기 처리 및 아키텍처 적용)</h2>
+            
+            <pre><code>
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+
+# 내부 모듈 (예시)
+from services import openai_service
+from database import db
+
+router = APIRouter()
+
+# 클라이언트 요청 데이터 모델
+class DiaryInput(BaseModel):
+    user_id: int
+    content: str
+
+@router.post("/api/v1/analyze-emotion")
+async def analyze_emotion(diary: DiaryInput):
+    """
+    사용자의 일기를 받아 AI 감정 분석을 수행하고 결과를 반환 및 저장합니다.
+    """
+    try:
+        # 1. OpenAI API를 비동기적으로 호출 (I/O 블로킹 방지)
+        response = await openai_service.get_sentiment_score(diary.content)
+
+        # 2. 분석된 온도(Temperature) 데이터를 DB에 저장
+        db.save_temperature(
+            user_id=diary.user_id, 
+            temp=response.temperature
+        )
+
+        # 3. 클라이언트에 결과 반환
+        return {
+            "status": "success",
+            "temperature": response.temperature,
+            "feedback": response.feedback
+        }
+        
+    except Exception as e:
+        # TODO: 실제 운영 환경에서는 e를 로깅 시스템(ex. Sentry)에 기록
+        raise HTTPException(status_code=500, detail="서버 오류가 발생했습니다.")
+            </code></pre>
+            
+            <div style="margin-top: 30px;">
+                <div class="tech-point-card">
+                    <h4>⚡ 비동기(Async) 처리로 병목 현상 해결</h4>
+                    <p>외부 AI API(OpenAI)를 호출할 때 발생하는 네트워크 대기 시간(I/O Bound) 동안 서버의 스레드가 멈추지 않도록 <code>async/await</code>를 적용했습니다. 이를 통해 다수의 사용자가 동시에 일기를 분석 요청하더라도 서버가 블로킹(Blocking)되지 않고 높은 동시성(Concurrency)을 유지하도록 설계했습니다.</p>
+                </div>
+                <div class="tech-point-card">
+                    <h4>🧩 관심사의 분리 (Separation of Concerns)</h4>
+                    <p>라우터(Controller) 내부에 복잡한 AI 호출 로직이나 DB 쿼리를 직접 작성하지 않고, <code>openai_service</code>와 <code>db</code> 모듈로 분리하여 코드의 가독성과 유지보수성을 높였습니다.</p>
+                </div>
+                <div class="tech-point-card">
+                    <h4>🛡️ Pydantic을 활용한 데이터 검증</h4>
+                    <p>FastAPI의 장점인 Pydantic 모델(<code>DiaryInput</code>)을 활용해 클라이언트로부터 들어오는 데이터의 타입과 유효성을 자동으로 검증하도록 구현했습니다.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById(btn.dataset.target).classList.add('active');
+                
+                const img = document.getElementById('dynamic-screenshot');
+                img.style.opacity = 0;
+                setTimeout(() => { img.src = btn.dataset.image; img.style.opacity = 1; }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
