@@ -4,103 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상세 - 딩동마켓</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <style>
-        /* 포트폴리오 메인과 동일한 네온 블루 테마 복구 */
         :root {
-            --primary-color: #00bfff; 
-            --bg-main: #0a0a0a;
-            --bg-card: #141414;
-            --text-main: #f0f0f0;
-            --text-muted: #9e9e9e;
-            --border-color: #2a2a2a;
+            /* 3D 팝 컬러 팔레트 */
+            --bg-sand: #f4ece6; 
+            --primary: #ff6b35; 
+            --secondary: #00b4d8; 
+            --accent: #fcd5ce; 
+            --text-dark: #2b2d42; 
+            --text-muted: #6c757d;
+            --card-bg: #ffffff;
+            --border-thick: 3px solid var(--text-dark);
+            --shadow-soft: 10px 20px 40px rgba(0, 0, 0, 0.08);
         }
 
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
-
-        .back-btn { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; margin-bottom: 30px; transition: opacity 0.3s; }
-        .back-btn:hover { opacity: 0.8; }
-
-        .project-header { border-bottom: 1px solid var(--border-color); padding-bottom: 30px; margin-bottom: 40px; }
-        .project-header h1 { font-size: 2.5rem; margin: 0 0 10px 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         
-        .tags span { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px; border: 1px solid var(--primary-color); display: inline-block; margin-bottom: 5px; }
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: var(--bg-sand); 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            background-image: radial-gradient(#d5caba 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
 
-        .content-section { margin-bottom: 50px; }
-        .content-section h2 { color: var(--primary-color); font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; }
+        /* 🚗 장난감 자동차 커서 */
+        #car-cursor {
+            position: fixed; top: 0; left: 0; width: 30px; height: 50px;
+            background-color: var(--primary); border-radius: 8px;
+            pointer-events: none; z-index: 9999;
+            transform-origin: center; transition: scale 0.1s ease-out; 
+            box-shadow: 3px 5px 10px rgba(0,0,0,0.3);
+            background-image: 
+                linear-gradient(to bottom, transparent 15%, #222 15%, #222 35%, transparent 35%, transparent 65%, #222 65%, #222 85%, transparent 85%), 
+                radial-gradient(circle at 20% 5%, #fff 3px, transparent 4px), 
+                radial-gradient(circle at 80% 5%, #fff 3px, transparent 4px); 
+        }
+        #car-cursor.click-anim { scale: 0.7; }
 
-        /* 인터랙티브 가이드 레이아웃 */
+        .container { max-width: 1100px; margin: 0 auto; padding: 80px 20px 60px; perspective: 1000px; }
+
+        /* 뒤로가기 버튼 */
+        .back-btn { 
+            display: inline-flex; align-items: center; gap: 10px;
+            color: var(--text-dark); text-decoration: none; font-weight: 900; font-size: 1.2rem;
+            margin-bottom: 30px; padding: 10px 20px; background: #fff;
+            border-radius: 12px; border: var(--border-thick);
+            box-shadow: 4px 4px 0 var(--text-muted); transition: 0.2s;
+        }
+        .back-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--primary); }
+        .back-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--primary); }
+
+        .project-header { margin-bottom: 40px; transform-style: preserve-3d; }
+        .project-header h1 { 
+            font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; margin: 0 0 10px 0; 
+            color: var(--text-dark); text-shadow: 2px 2px 0 #fff, 5px 5px 0 var(--secondary);
+        }
+        .project-header p { font-size: 1.2rem; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; }
+        
+        .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+        .tags span { 
+            background: var(--text-dark); color: #fff; padding: 8px 16px; 
+            border-radius: 99px; font-size: 0.95rem; font-weight: 800; 
+            box-shadow: 3px 3px 0 var(--primary);
+        }
+
+        .content-section { margin-bottom: 60px; }
+        .content-section h2 { 
+            font-size: 2rem; font-weight: 900; margin-bottom: 20px; 
+            color: var(--text-dark); text-shadow: 2px 2px 0 #fff;
+        }
+
+        /* 3D 인터랙티브 가이드 탭 */
         .interactive-guide {
-            display: flex;
-            gap: 40px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 30px;
-            margin-top: 20px;
-            align-items: flex-start;
+            display: flex; gap: 40px; background: #fff; border: var(--border-thick);
+            border-radius: 32px; padding: 40px; box-shadow: 15px 15px 0 var(--primary);
+            transform-style: preserve-3d; transition: transform 0.1s;
         }
 
-        .guide-image { flex: 1; max-width: 350px; }
+        .guide-image { flex: 1; min-width: 300px; transform: translateZ(30px); }
         .guide-image img {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
-            border: 1px solid #333;
-            transition: opacity 0.3s ease-in-out; 
-            opacity: 1;
+            width: 100%; border-radius: 20px; border: var(--border-thick);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1); transition: opacity 0.3s ease-in-out; 
+            background: var(--bg-sand);
         }
 
-        .guide-content { flex: 2; }
+        .guide-content { flex: 1.5; transform: translateZ(40px); }
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; }
-        .tab-btn:hover { color: var(--text-main); border-color: #555; }
-        .tab-btn.active { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
+        .tab-btn { 
+            background: var(--bg-sand); color: var(--text-dark); border: 2px solid var(--text-dark); 
+            padding: 12px 20px; border-radius: 12px; cursor: none; font-weight: 800; font-size: 1rem; 
+            transition: all 0.2s; box-shadow: 3px 3px 0 var(--text-muted);
+        }
+        .tab-btn:hover { transform: translateY(-3px); box-shadow: 3px 6px 0 var(--primary); }
+        .tab-btn.active { 
+            background: var(--primary); color: #fff; border-color: var(--primary);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2); transform: translateY(2px);
+        }
 
         .panel { display: none; animation: fadeIn 0.4s ease-in-out; }
         .panel.active { display: block; }
-        .panel h4 { color: #fff; margin: 0 0 10px 0; font-size: 1.1rem; }
-        .panel p { color: var(--text-muted); margin-bottom: 25px; font-size: 0.95rem; }
+        .panel h4 { font-size: 1.4rem; font-weight: 900; color: var(--secondary); margin-bottom: 10px; }
+        .panel p { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; line-height: 1.6; }
 
-        /* 기술 포인트 카드 */
-        .tech-point-container { display: flex; flex-direction: column; gap: 15px; margin-top: 35px; }
+        /* 백엔드 로직 카드 */
+        .tech-point-container { display: flex; flex-direction: column; gap: 20px; margin-top: 35px; }
+        .tech-point-title { color: var(--text-dark); font-size: 1.5rem; margin-bottom: 5px; font-weight: 900; text-shadow: 1px 1px 0 #fff; }
         .tech-point-card { 
-            background: #1a1a2e; 
-            border: 1px solid var(--border-color); 
-            border-left: 4px solid var(--primary-color); 
-            padding: 20px 25px; 
-            border-radius: 12px; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
+            background: #fff; border: var(--border-thick); padding: 25px 30px; 
+            border-radius: 20px; box-shadow: 8px 8px 0 var(--secondary); 
+            transition: 0.2s; transform-style: preserve-3d;
         }
-        .tech-point-card h4 { margin: 0; color: #fff; font-size: 1.05rem; }
-        .tech-point-card p { margin: 0; font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
+        .tech-point-card:hover { transform: translate(-5px, -5px); box-shadow: 13px 13px 0 var(--text-dark); }
+        .tech-point-card h4 { margin: 0 0 10px 0; color: var(--text-dark); font-size: 1.3rem; font-weight: 900; }
+        .tech-point-card p { margin: 0; font-size: 1.05rem; color: var(--text-muted); font-weight: 500; }
 
-        pre { background-color: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; color: #d4d4d4; margin-top: 20px; font-family: 'Courier New', Courier, monospace; }
-        .highlight-text { color: var(--primary-color); font-weight: bold; }
+        pre { 
+            background-color: var(--text-dark); padding: 25px; border-radius: 16px; 
+            border: var(--border-thick); box-shadow: 8px 8px 0 var(--text-muted);
+            overflow-x: auto; color: #f8fafc; margin-top: 20px; font-family: 'Courier New', Courier, monospace; 
+            font-size: 0.95rem; line-height: 1.5;
+        }
+        .highlight-text { color: var(--primary); font-weight: 900; background: rgba(255, 107, 53, 0.1); padding: 2px 6px; border-radius: 4px; }
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .interactive-guide { flex-direction: column; align-items: center; } .guide-image { max-width: 100%; } }
+        
+        @media (max-width: 800px) { 
+            .interactive-guide { flex-direction: column; padding: 25px; } 
+            .project-header h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <a href="index.html#projects" class="back-btn">← 프로젝트 목록으로</a>
+    <div id="car-cursor"></div>
 
-        <header class="project-header">
+    <div class="container">
+        <a href="index.html#projects" class="back-btn tilt-item">← BACK TO LOBBY</a>
+
+        <header class="project-header tilt-item">
             <h1>딩동마켓 (우리 동네 안전 중고거래)</h1>
-            <p style="color: var(--text-muted); margin-top: 5px;">접근성 강화 및 AI 보안 기술이 적용된 하이퍼로컬 중고거래 플랫폼</p>
-            <div class="tags" style="margin-top: 15px;">
+            <p>접근성 강화 및 AI 보안 기술이 적용된 하이퍼로컬 중고거래 플랫폼</p>
+            <div class="tags">
                 <span>Vanilla JS</span><span>CSS Custom Properties</span><span>LocalStorage</span><span>A11y</span>
             </div>
         </header>
 
         <section class="content-section">
             <h2>💡 서비스 주요 기능 및 구현 기술</h2>
-            <div class="interactive-guide">
+            <div class="interactive-guide tilt-item" id="guide-box">
                 <div class="guide-image">
                     <img id="dynamic-screenshot" src="image_fa4feb.png" alt="딩동마켓 기능 스크린샷">
                 </div>
@@ -136,10 +191,12 @@
         </section>
 
         <section class="content-section">
-            <h2>⚙️ 핵심 로직 (테마 전환 및 데이터 유지)</h2>
-            <p>UI 상태를 동적으로 제어하고 사용자 설정을 브라우저에 보존하기 위해 <span class="highlight-text">Vanilla JS와 LocalStorage</span>를 결합한 로직입니다.</p>
+            <h2>⚙️ 핵심 로직 (접근성 전환 및 데이터 영속성)</h2>
+            <p style="font-size: 1.15rem; color: var(--text-muted); font-weight: 600; margin-bottom: 20px;">
+                UI 변수를 동적으로 제어하고 사용자 설정을 브라우저에 유지하기 위해 <span class="highlight-text">Vanilla JS와 LocalStorage</span>를 활용한 핵심 로직입니다.
+            </p>
             
-            <pre><code>
+            <pre class="tilt-item"><code>
 // 1. 큰 글씨 모드(Senior Mode) 상태 전환 및 영속화
 function applySeniorMode(isSenior) {
   // body 클래스 토글을 통해 CSS 변수 테마를 일괄 변경
@@ -166,12 +223,12 @@ function mockVisionAutofill() {
             </code></pre>
 
             <div class="tech-point-container">
-                <h3 style="color: var(--text-main); font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;">💡 기술 적용 포인트 (Key Achievements)</h3>
-                <div class="tech-point-card">
+                <h3 class="tech-point-title">💡 기술 적용 포인트 (Key Achievements)</h3>
+                <div class="tech-point-card tilt-item">
                     <h4>🛠 CSS Custom Properties를 통한 중앙 집중식 테마 관리</h4>
                     <p><code>styles.css</code>에 정의된 <code>:root</code> 변수를 조작하여, 별도의 JS 스타일 수정 없이 <strong>단일 클래스 토글만으로 전체 UI를 재설계</strong>하는 효율적인 구조를 구축했습니다.</p>
                 </div>
-                <div class="tech-point-card">
+                <div class="tech-point-card tilt-item">
                     <h4>💾 데이터 영속성(Persistence) 확보</h4>
                     <p>사용자가 페이지를 새로고침하더라도 <strong>LocalStorage를 통해 이전 설정(큰 글씨 모드 등)이 유지</strong>되도록 설계하여 사용자 경험(UX)의 연속성을 확보했습니다.</p>
                 </div>
@@ -180,6 +237,43 @@ function mockVisionAutofill() {
     </div>
 
     <script>
+        /* 🚗 장난감 자동차 커서 물리 엔진 */
+        const car = document.getElementById('car-cursor');
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let carX = mouseX, carY = mouseY;
+        let angle = 0;
+
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+
+        function animateCar() {
+            const dx = mouseX - carX; const dy = mouseY - carY;
+            carX += dx * 0.15; carY += dy * 0.15;
+            if (Math.abs(dx) > 1 || Math.abs(dy) > 1) { angle = Math.atan2(dy, dx) * 180 / Math.PI + 90; }
+            car.style.transform = `translate(${carX - 15}px, ${carY - 25}px) rotate(${angle}deg)`;
+            requestAnimationFrame(animateCar);
+        }
+        animateCar();
+
+        document.addEventListener('mousedown', () => car.classList.add('click-anim'));
+        document.addEventListener('mouseup', () => car.classList.remove('click-anim'));
+
+        /* 🌌 3D 틸트 효과 (상세 페이지의 입체감) */
+        const tiltItems = document.querySelectorAll('.tilt-item');
+        tiltItems.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                const centerX = rect.width / 2; const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5; 
+                const rotateY = ((x - centerX) / centerX) * 5;
+                item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        /* 탭 UI 전환 기능 */
         document.addEventListener('DOMContentLoaded', () => {
             const tabBtns = document.querySelectorAll('.tab-btn');
             const panels = document.querySelectorAll('.panel');
@@ -189,6 +283,7 @@ function mockVisionAutofill() {
                 btn.addEventListener('click', () => {
                     tabBtns.forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
+
                     panels.forEach(p => p.classList.remove('active'));
                     document.getElementById(btn.getAttribute('data-target')).classList.add('active');
 

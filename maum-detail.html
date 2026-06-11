@@ -4,65 +4,209 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>상세 - 마음온도</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- 가독성을 위한 Pretendard 폰트 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <style>
-        :root { --primary-color: #00bfff; --bg-main: #0a0a0a; --bg-card: #141414; --text-main: #f0f0f0; --text-muted: #9e9e9e; --border-color: #2a2a2a; }
-        body { font-family: 'Noto Sans KR', sans-serif; background-color: var(--bg-main); color: var(--text-main); line-height: 1.7; margin: 0; padding: 0; }
-        .container { max-width: 1000px; margin: 0 auto; padding: 60px 20px; }
-        .back-btn { display: inline-block; color: var(--primary-color); text-decoration: none; font-weight: 700; margin-bottom: 30px; }
-        .project-header { border-bottom: 1px solid var(--border-color); padding-bottom: 30px; margin-bottom: 40px; }
-        .tags span { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 8px; border: 1px solid var(--primary-color); display: inline-block; }
+        :root {
+            /* 3D 팝 컬러 팔레트 */
+            --bg-sand: #f4ece6; 
+            --primary: #ff6b35; 
+            --secondary: #00b4d8; 
+            --accent: #fcd5ce; 
+            --text-dark: #2b2d42; 
+            --text-muted: #6c757d;
+            --card-bg: #ffffff;
+            --border-thick: 3px solid var(--text-dark);
+            --shadow-soft: 10px 20px 40px rgba(0, 0, 0, 0.08);
+        }
 
-        /* 인터랙티브 가이드 레이아웃 */
-        .interactive-guide { display: flex; gap: 40px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 30px; margin-top: 20px; align-items: flex-start; }
-        .guide-image { flex: 1; max-width: 350px; }
-        .guide-image img { width: 100%; border-radius: 12px; transition: opacity 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .guide-content { flex: 2; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
-        .tab-btn { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .tab-btn.active { background: rgba(0, 191, 255, 0.1); color: var(--primary-color); border-color: var(--primary-color); }
-        .panel { display: none; } .panel.active { display: block; animation: fadeIn 0.4s; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         
-        /* 기술 포인트 카드 */
-        .tech-point-card { background: #1a1a2e; border: 1px solid var(--border-color); border-left: 4px solid var(--primary-color); padding: 20px; border-radius: 8px; margin-top: 15px; }
-        .tech-point-card h4 { margin-bottom: 8px; color: #fff; }
-        .tech-point-card p { margin: 0; font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+        body { 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: var(--bg-sand); 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            overflow-x: hidden;
+            background-image: radial-gradient(#d5caba 2px, transparent 2px);
+            background-size: 40px 40px;
+        }
 
-        pre { background-color: #1e1e1e; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); overflow-x: auto; color: #d4d4d4; margin-top: 20px; font-family: 'Courier New', Courier, monospace; line-height: 1.5; }
+        /* 🚗 브루노 시몬 스타일 커스텀 자동차 커서 (클릭 버그 수정됨) */
+        #cursor-wrapper {
+            position: fixed; top: 0; left: 0;
+            pointer-events: none; z-index: 9999;
+        }
+
+        #car-cursor {
+            width: 30px; height: 50px;
+            background-color: var(--primary); border-radius: 8px;
+            box-shadow: 3px 5px 10px rgba(0,0,0,0.3);
+            transform-origin: center; 
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            background-image: 
+                linear-gradient(to bottom, transparent 15%, #222 15%, #222 35%, transparent 35%, transparent 65%, #222 65%, #222 85%, transparent 85%), 
+                radial-gradient(circle at 20% 5%, #fff 3px, transparent 4px), 
+                radial-gradient(circle at 80% 5%, #fff 3px, transparent 4px); 
+        }
+
+        #car-cursor.click-anim { 
+            transform: scale(0.65); 
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 80px 20px 60px; perspective: 1000px; }
+
+        /* 뒤로가기 버튼 */
+        .back-btn { 
+            display: inline-flex; align-items: center; gap: 10px;
+            color: var(--text-dark); text-decoration: none; font-weight: 900; font-size: 1.2rem;
+            margin-bottom: 30px; padding: 10px 20px; background: #fff;
+            border-radius: 12px; border: var(--border-thick);
+            box-shadow: 4px 4px 0 var(--text-muted); transition: 0.2s;
+        }
+        .back-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--primary); }
+        .back-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--primary); }
+
+        .project-header { margin-bottom: 40px; transform-style: preserve-3d; }
+        .project-header h1 { 
+            font-size: clamp(2.5rem, 4vw, 3.5rem); font-weight: 900; margin: 0 0 10px 0; 
+            color: var(--text-dark); text-shadow: 2px 2px 0 #fff, 5px 5px 0 var(--secondary);
+        }
+        .project-header p { font-size: 1.2rem; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; }
+        
+        .tags { display: flex; gap: 10px; flex-wrap: wrap; }
+        .tags span { 
+            background: var(--text-dark); color: #fff; padding: 8px 16px; 
+            border-radius: 99px; font-size: 0.95rem; font-weight: 800; 
+            box-shadow: 3px 3px 0 var(--primary);
+        }
+
+        .content-section { margin-bottom: 60px; }
+        .content-section h2 { 
+            font-size: 2rem; font-weight: 900; margin-bottom: 20px; 
+            color: var(--text-dark); text-shadow: 2px 2px 0 #fff;
+        }
+
+        /* 3D 인터랙티브 가이드 탭 */
+        .interactive-guide {
+            display: flex; gap: 40px; background: #fff; border: var(--border-thick);
+            border-radius: 32px; padding: 40px; box-shadow: 15px 15px 0 var(--primary);
+            transform-style: preserve-3d; transition: transform 0.1s;
+        }
+
+        .guide-image { flex: 1; min-width: 300px; transform: translateZ(30px); }
+        .guide-image img {
+            width: 100%; border-radius: 20px; border: var(--border-thick);
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.1); transition: opacity 0.3s ease-in-out; 
+            background: var(--bg-sand);
+        }
+
+        .guide-content { flex: 1.5; transform: translateZ(40px); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
+        .tab-btn { 
+            background: var(--bg-sand); color: var(--text-dark); border: 2px solid var(--text-dark); 
+            padding: 12px 20px; border-radius: 12px; cursor: none; font-weight: 800; font-size: 1rem; 
+            transition: all 0.2s; box-shadow: 3px 3px 0 var(--text-muted);
+        }
+        .tab-btn:hover { transform: translateY(-3px); box-shadow: 3px 6px 0 var(--primary); }
+        .tab-btn.active { 
+            background: var(--primary); color: #fff; border-color: var(--primary);
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.2); transform: translateY(2px);
+        }
+
+        .panel { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .panel.active { display: block; }
+        .panel h4 { font-size: 1.4rem; font-weight: 900; color: var(--secondary); margin-bottom: 10px; }
+        .panel p { font-size: 1.1rem; color: var(--text-muted); font-weight: 500; line-height: 1.6; }
+
+        /* 백엔드 로직 카드 */
+        .tech-point-container { display: flex; flex-direction: column; gap: 20px; margin-top: 35px; }
+        .tech-point-title { color: var(--text-dark); font-size: 1.5rem; margin-bottom: 5px; font-weight: 900; text-shadow: 1px 1px 0 #fff; }
+        .tech-point-card { 
+            background: #fff; border: var(--border-thick); padding: 25px 30px; 
+            border-radius: 20px; box-shadow: 8px 8px 0 var(--secondary); 
+            transition: 0.2s; transform-style: preserve-3d;
+        }
+        .tech-point-card:hover { transform: translate(-5px, -5px); box-shadow: 13px 13px 0 var(--text-dark); }
+        .tech-point-card h4 { margin: 0 0 10px 0; color: var(--text-dark); font-size: 1.3rem; font-weight: 900; }
+        .tech-point-card p { margin: 0; font-size: 1.05rem; color: var(--text-muted); font-weight: 500; }
+
+        pre { 
+            background-color: var(--text-dark); padding: 25px; border-radius: 16px; 
+            border: var(--border-thick); box-shadow: 8px 8px 0 var(--text-muted);
+            overflow-x: auto; color: #f8fafc; margin-top: 20px; font-family: 'Courier New', Courier, monospace; 
+            font-size: 0.95rem; line-height: 1.5;
+        }
+        
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .interactive-guide { flex-direction: column; align-items: center; } .guide-image { max-width: 100%; } }
+        
+        @media (max-width: 800px) { 
+            .interactive-guide { flex-direction: column; padding: 25px; } 
+            .project-header h1 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
+
+    <!-- 🚙 장난감 자동차 커서 -->
+    <div id="cursor-wrapper">
+        <div id="car-cursor"></div>
+    </div>
+
     <div class="container">
-        <a href="index.html#projects" class="back-btn">← 프로젝트 목록으로</a>
-        <header class="project-header">
+        <a href="index.html#projects" class="back-btn tilt-item">← BACK TO LOBBY</a>
+
+        <header class="project-header tilt-item">
             <h1>마음온도 (AI 기반 멘탈케어)</h1>
-            <div class="tags"><span>Python (FastAPI)</span><span>OpenAI API</span><span>MySQL</span></div>
+            <p>비동기 처리 최적화가 적용된 감정 분석 멘탈케어 서비스</p>
+            <div class="tags">
+                <span>Python (FastAPI)</span><span>OpenAI API</span><span>MySQL</span>
+            </div>
         </header>
 
-        <section class="interactive-guide">
-            <div class="guide-image"><img id="dynamic-screenshot" src="image_1a88bd.png"></div>
-            <div class="guide-content">
-                <div class="tabs">
-                    <button class="tab-btn" data-target="tab1" data-image="image_1.png">일기 작성 UI</button>
-                    <button class="tab-btn" data-target="tab2" data-image="image_2.png">AI 감정 분석</button>
-                    <button class="tab-btn" data-target="tab3" data-image="image_3.png">감정 통계 대시보드</button>
-                    <button class="tab-btn active" data-target="tab4" data-image="image_4.png">지난 기록 리스트</button>
+        <section class="content-section">
+            <h2>💡 서비스 주요 기능 및 구현 기술</h2>
+            <div class="interactive-guide tilt-item" id="guide-box">
+                <div class="guide-image">
+                    <!-- 기본 이미지 설정 -->
+                    <img id="dynamic-screenshot" src="image_1a88bd.png" alt="마음온도 기능 스크린샷">
                 </div>
-                <div class="tab-panels">
-                    <div id="tab1" class="panel"><h4>사용자 경험 중심의 일기 작성</h4><p>사용자가 일기를 작성하며 심적 피로를 덜 수 있도록 부드러운 UI와 실시간 상태 관리를 적용했습니다.</p></div>
-                    <div id="tab2" class="panel"><h4>OpenAI 기반 감정 추출</h4><p>작성된 텍스트에서 감정 데이터를 비동기적으로 추출하여 분석 효율을 높였습니다.</p></div>
-                    <div id="tab3" class="panel"><h4>시각적 통계 피드백</h4><p>캘린더와 차트를 활용해 사용자가 자신의 감정 변화를 한눈에 볼 수 있도록 시각화했습니다.</p></div>
-                    <div id="tab4" class="panel active"><h4>과거 기록 히스토리</h4><p>과거의 감정 온도와 AI의 위로 섞인 피드백을 언제든 다시 돌아볼 수 있도록 아카이빙 기능을 구현했습니다.</p></div>
+                
+                <div class="guide-content">
+                    <div class="tabs">
+                        <!-- 사용자님이 지정하신 파일명으로 탭 연결 완료 -->
+                        <button class="tab-btn" data-target="tab1" data-image="image_1.png">일기 작성 UI</button>
+                        <button class="tab-btn" data-target="tab2" data-image="image_2.png">AI 감정 분석</button>
+                        <button class="tab-btn" data-target="tab3" data-image="image_3.png">감정 통계 대시보드</button>
+                        <button class="tab-btn active" data-target="tab4" data-image="image_4.png">지난 기록 리스트</button>
+                    </div>
+
+                    <div class="tab-panels">
+                        <div id="tab1" class="panel">
+                            <h4>사용자 경험 중심의 일기 작성</h4>
+                            <p>사용자가 일기를 작성하며 심적 피로를 덜 수 있도록 부드러운 UI와 실시간 상태 관리를 적용했습니다.[cite: 4]</p>
+                        </div>
+                        <div id="tab2" class="panel">
+                            <h4>OpenAI 기반 감정 추출</h4>
+                            <p>작성된 텍스트에서 감정 데이터를 비동기적으로 추출하여 분석 효율을 높였습니다.[cite: 4]</p>
+                        </div>
+                        <div id="tab3" class="panel">
+                            <h4>시각적 통계 피드백</h4>
+                            <p>캘린더와 차트를 활용해 사용자가 자신의 감정 변화를 한눈에 볼 수 있도록 시각화했습니다.[cite: 4]</p>
+                        </div>
+                        <div id="tab4" class="panel active">
+                            <h4>과거 기록 히스토리</h4>
+                            <p>과거의 감정 온도와 AI의 위로 섞인 피드백을 언제든 다시 돌아볼 수 있도록 아카이빙 기능을 구현했습니다.[cite: 4]</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <section style="margin-top: 50px;">
+        <section class="content-section">
             <h2>⚙️ 핵심 백엔드 로직 (비동기 처리 및 아키텍처 적용)</h2>
             
-            <pre><code>
+            <pre class="tilt-item"><code>
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -103,35 +247,97 @@ async def analyze_emotion(diary: DiaryInput):
         # TODO: 실제 운영 환경에서는 e를 로깅 시스템(ex. Sentry)에 기록
         raise HTTPException(status_code=500, detail="서버 오류가 발생했습니다.")
             </code></pre>
-            
-            <div style="margin-top: 30px;">
-                <div class="tech-point-card">
+
+            <div class="tech-point-container">
+                <h3 class="tech-point-title">💡 기술 적용 포인트 (Key Achievements)</h3>
+                <div class="tech-point-card tilt-item">
                     <h4>⚡ 비동기(Async) 처리로 병목 현상 해결</h4>
-                    <p>외부 AI API(OpenAI)를 호출할 때 발생하는 네트워크 대기 시간(I/O Bound) 동안 서버의 스레드가 멈추지 않도록 <code>async/await</code>를 적용했습니다. 이를 통해 다수의 사용자가 동시에 일기를 분석 요청하더라도 서버가 블로킹(Blocking)되지 않고 높은 동시성(Concurrency)을 유지하도록 설계했습니다.</p>
+                    <p>외부 AI API(OpenAI)를 호출할 때 발생하는 네트워크 대기 시간(I/O Bound) 동안 서버의 스레드가 멈추지 않도록 <code>async/await</code>를 적용했습니다. 이를 통해 다수의 사용자가 동시에 일기를 분석 요청하더라도 서버가 블로킹(Blocking)되지 않고 높은 동시성(Concurrency)을 유지하도록 설계했습니다.[cite: 4]</p>
                 </div>
-                <div class="tech-point-card">
+                <div class="tech-point-card tilt-item">
                     <h4>🧩 관심사의 분리 (Separation of Concerns)</h4>
-                    <p>라우터(Controller) 내부에 복잡한 AI 호출 로직이나 DB 쿼리를 직접 작성하지 않고, <code>openai_service</code>와 <code>db</code> 모듈로 분리하여 코드의 가독성과 유지보수성을 높였습니다.</p>
+                    <p>라우터(Controller) 내부에 복잡한 AI 호출 로직이나 DB 쿼리를 직접 작성하지 않고, <code>openai_service</code>와 <code>db</code> 모듈로 분리하여 코드의 가독성과 유지보수성을 높였습니다.[cite: 4]</p>
                 </div>
-                <div class="tech-point-card">
+                <div class="tech-point-card tilt-item">
                     <h4>🛡️ Pydantic을 활용한 데이터 검증</h4>
-                    <p>FastAPI의 장점인 Pydantic 모델(<code>DiaryInput</code>)을 활용해 클라이언트로부터 들어오는 데이터의 타입과 유효성을 자동으로 검증하도록 구현했습니다.</p>
+                    <p>FastAPI의 장점인 Pydantic 모델(<code>DiaryInput</code>)을 활용해 클라이언트로부터 들어오는 데이터의 타입과 유효성을 자동으로 검증하도록 구현했습니다.[cite: 4]</p>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById(btn.dataset.target).classList.add('active');
-                
-                const img = document.getElementById('dynamic-screenshot');
-                img.style.opacity = 0;
-                setTimeout(() => { img.src = btn.dataset.image; img.style.opacity = 1; }, 150);
+        /* 🚗 장난감 자동차 커서 물리 엔진 */
+        const cursorWrapper = document.getElementById('cursor-wrapper');
+        const carCursor = document.getElementById('car-cursor');
+        
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let carX = mouseX, carY = mouseY;
+        let angle = 0;
+
+        document.addEventListener('mousemove', (e) => { 
+            mouseX = e.clientX; 
+            mouseY = e.clientY; 
+        });
+
+        function animateCar() {
+            const dx = mouseX - carX; 
+            const dy = mouseY - carY;
+            
+            carX += dx * 0.15; 
+            carY += dy * 0.15;
+            
+            if (Math.abs(dx) > 1 || Math.abs(dy) > 1) { 
+                angle = Math.atan2(dy, dx) * 180 / Math.PI + 90; 
+            }
+            
+            cursorWrapper.style.transform = `translate(${carX - 15}px, ${carY - 25}px) rotate(${angle}deg)`;
+            requestAnimationFrame(animateCar);
+        }
+        animateCar();
+
+        document.addEventListener('mousedown', () => carCursor.classList.add('click-anim'));
+        document.addEventListener('mouseup', () => carCursor.classList.remove('click-anim'));
+
+        /* 🌌 3D 틸트 효과 (상세 페이지의 입체감) */
+        const tiltItems = document.querySelectorAll('.tilt-item');
+        tiltItems.forEach(item => {
+            item.addEventListener('mousemove', (e) => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2; 
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5; 
+                const rotateY = ((x - centerX) / centerX) * 5;
+                item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+            });
+        });
+
+        /* 탭 UI 전환 기능 */
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const panels = document.querySelectorAll('.panel');
+            const mainImage = document.getElementById('dynamic-screenshot');
+
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    panels.forEach(p => p.classList.remove('active'));
+                    document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+
+                    const targetImageSrc = btn.getAttribute('data-image');
+                    mainImage.style.opacity = 0; 
+                    setTimeout(() => {
+                        mainImage.src = targetImageSrc; 
+                        mainImage.style.opacity = 1; 
+                    }, 150); 
+                });
             });
         });
     </script>
